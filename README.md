@@ -7,8 +7,8 @@ Fabrun är ett terminalprogram som kör fördefinierade git-kommandon och stream
 1. Klona repositoryt och gå till mappen:
 
    ```bash
-   git clone https://github.com/ditt-användarnamn/fabrun.git
+   git clone https://github.com/HTA86/fabrun.git
    cd fabrun
+   chmod +x fabrun
+   echo "export PATH=\$PATH:$(pwd)" >> ~/.zshrc && source ~/.zshrc
    ```
-
-echo "export PATH=\$PATH:$(pwd)" >> ~/.zshrc && source ~/.zshrc
