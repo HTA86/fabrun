@@ -1,0 +1,1 @@
+git log --since="2 weeks ago" -p | fabric --stream --pattern summarize_git_changes

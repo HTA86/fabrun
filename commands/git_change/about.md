@@ -1,0 +1,1 @@
+Generates git logs and processes them with Fabric using the 'summarize_git_changes' pattern.
