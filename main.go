@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/schollz/progressbar/v3"
 )
 
 var (
@@ -16,6 +18,8 @@ var (
 	updateCommandsFlag bool
 	version            = "0.5.0"
 	commandsURL        = "https://api.github.com/repos/HTA86/fabrun/contents/commands"
+	totalFiles         int
+	progress           *progressbar.ProgressBar
 )
 
 func init() {
@@ -92,13 +96,59 @@ func updateCommands() {
 		return
 	}
 
+	// Count the total number of files and directories
+	totalFiles = 0
+	if err := countFiles(commandsURL); err != nil {
+		LogError("Failed to count files:", err)
+		return
+	}
+
+	// Initialize the progress bar
+	progress = progressbar.NewOptions(totalFiles,
+		progressbar.OptionSetPredictTime(false),
+		progressbar.OptionSetRenderBlankState(true),
+	)
+
 	// Fetch the list of files and directories from the commands directory in the repository
 	if err := fetchAndDownloadFiles(commandsURL, destDir); err != nil {
 		LogError("Failed to update commands:", err)
 		return
 	}
 
-	fmt.Println("Commands updated successfully!")
+	fmt.Println("\nCommands updated successfully!")
+}
+
+func countFiles(url string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return fmt.Errorf("failed to fetch commands: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("failed to fetch commands: unexpected status code %d", resp.StatusCode)
+	}
+
+	var files []struct {
+		Type string `json:"type"`
+		URL  string `json:"url"`
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&files); err != nil {
+		return fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	for _, file := range files {
+		if file.Type == "dir" {
+			if err := countFiles(file.URL); err != nil {
+				return err
+			}
+		} else if file.Type == "file" {
+			totalFiles++
+		}
+	}
+
+	return nil
 }
 
 func fetchAndDownloadFiles(url string, destDir string) error {
@@ -140,8 +190,6 @@ func fetchAndDownloadFiles(url string, destDir string) error {
 				continue
 			}
 
-			fmt.Printf("Downloading %s...\n", file.Name)
-
 			fileResp, err := http.Get(file.DownloadURL)
 			if err != nil {
 				return fmt.Errorf("failed to download file %s: %w", file.Name, err)
@@ -159,6 +207,9 @@ func fetchAndDownloadFiles(url string, destDir string) error {
 			}
 
 			outFile.Close()
+
+			// Update the progress bar
+			progress.Add(1)
 		}
 	}
 
