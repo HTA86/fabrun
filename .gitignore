@@ -1,0 +1,45 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Logs
+*.log
+
+# Dependency directories
+vendor/
+Godeps/
+
+# Go workspace
+*.go-workspace
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*~
+.project
+.classpath
+.csettings
+*.launch
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# GoLand
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Releases directory
+releases/

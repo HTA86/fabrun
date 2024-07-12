@@ -75,3 +75,11 @@ Here is an example of how you can organize your commands:
 #### In this structure:
 * Each folder name (git_commit, deploy, backup, diff) corresponds to the command you will use with FabRun.
 * Inside each folder, the command.md file contains the actual command to be executed.
+
+
+
+## Develop
+#### Build
+    ```sh
+    GOOS=darwin GOARCH=arm64 go build -o fabrun-darwin-arm64
+    ```

@@ -8,7 +8,7 @@ import (
 var (
 	listFlag    bool
 	versionFlag bool
-	version     = "1.0.0"
+	version     = "0.5.0"
 )
 
 func init() {
