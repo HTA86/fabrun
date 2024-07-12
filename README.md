@@ -35,7 +35,7 @@ fabrun --list
 fabrun diff
 ```
 
-This command runns the command in the file from the `commands/"diff"/command.md`
+This command runs the command defined in `~/.config/fabrun/commands/diff/command.md`.
 
 
 #### Create a custom Command
