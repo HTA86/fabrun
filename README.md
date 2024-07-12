@@ -76,10 +76,24 @@ Here is an example of how you can organize your commands:
 * Each folder name (git_commit, deploy, backup, diff) corresponds to the command you will use with FabRun.
 * Inside each folder, the command.md file contains the actual command to be executed.
 
-
+### Update Commands
+To update the commands from the GitHub repository, use the --update-commands flag:
+```sh
+fabrun --update-commands
+```
 
 ## Develop
 #### Build
-    ```sh
-    GOOS=darwin GOARCH=arm64 go build -o fabrun-darwin-arm64
-    ```
+```sh
+# Bygg för macOS på Intel/AMD64
+GOOS=darwin GOARCH=amd64 go build -o releases/fabrun-darwin-amd64
+
+# Bygg för macOS på M1 (ARM64)
+GOOS=darwin GOARCH=arm64 go build -o releases/fabrun-darwin-arm64
+
+# Bygg för Linux på AMD64
+GOOS=linux GOARCH=amd64 go build -o releases/fabrun-linux-amd64
+
+# Bygg för Windows på AMD64
+GOOS=windows GOARCH=amd64 go build -o releases/fabrun-windows-amd64.exe
+```

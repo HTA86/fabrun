@@ -43,3 +43,9 @@ Thumbs.db
 
 # Releases directory
 releases/
+
+# Ignorera binärfiler
+fabrun-darwin-arm64
+fabrun-darwin-amd64
+fabrun-linux-amd64
+fabrun-windows-amd64.exe

@@ -8,8 +8,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-
-	"github.com/schollz/progressbar/v3"
 )
 
 var (
@@ -19,7 +17,7 @@ var (
 	version            = "0.5.0"
 	commandsURL        = "https://api.github.com/repos/HTA86/fabrun/contents/commands"
 	totalFiles         int
-	progress           *progressbar.ProgressBar
+	completedFiles     int
 )
 
 func init() {
@@ -103,11 +101,8 @@ func updateCommands() {
 		return
 	}
 
-	// Initialize the progress bar
-	progress = progressbar.NewOptions(totalFiles,
-		progressbar.OptionSetPredictTime(false),
-		progressbar.OptionSetRenderBlankState(true),
-	)
+	// Initialize the progress
+	completedFiles = 0
 
 	// Fetch the list of files and directories from the commands directory in the repository
 	if err := fetchAndDownloadFiles(commandsURL, destDir); err != nil {
@@ -208,10 +203,26 @@ func fetchAndDownloadFiles(url string, destDir string) error {
 
 			outFile.Close()
 
-			// Update the progress bar
-			progress.Add(1)
+			// Update the progress
+			completedFiles++
+			printProgressBar(completedFiles, totalFiles)
 		}
 	}
 
 	return nil
+}
+
+func printProgressBar(completed, total int) {
+	percentage := float64(completed) / float64(total) * 100
+	barWidth := 50
+	filledBarWidth := int(float64(barWidth) * percentage / 100)
+
+	fmt.Printf("\r[")
+	for i := 0; i < filledBarWidth; i++ {
+		fmt.Print("=")
+	}
+	for i := filledBarWidth; i < barWidth; i++ {
+		fmt.Print(" ")
+	}
+	fmt.Printf("] %.2f%%", percentage)
 }
