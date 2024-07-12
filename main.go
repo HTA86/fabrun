@@ -29,7 +29,7 @@ func main() {
 	flag.Parse()
 
 	if versionFlag {
-		fmt.Println("fabrun version", version)
+		printVersion()
 		return
 	}
 
@@ -43,16 +43,16 @@ func main() {
 		return
 	}
 
-	commandName := flag.Arg(0)
-	commandPath := filepath.Join(os.Getenv("HOME"), ".config", "fabrun", "commands", commandName, "command.md")
+	commandID := flag.Arg(0)
+	commandPath := getCommandFilePath(commandID)
 
-	command, err := readCommand(commandPath)
+	command, err := readCommandFromFile(commandPath)
 	if err != nil {
-		log.Println("Error:", err)
+		logError("Error reading command:", err)
 		return
 	}
 
-	runCommand(command)
+	executeCommand(command)
 }
 
 func usage() {
@@ -67,23 +67,35 @@ func usage() {
 	fmt.Fprintf(flag.CommandLine.Output(), "  fabrun -v                   # Show the program's version (short flag)\n")
 }
 
+func printVersion() {
+	fmt.Println("fabrun version", version)
+}
+
 func listCommands() {
-	commandsDir := filepath.Join(os.Getenv("HOME"), ".config", "fabrun", "commands")
-	files, err := os.ReadDir(commandsDir)
+	commandsDir := getCommandsDirectory()
+	dirs, err := os.ReadDir(commandsDir)
 	if err != nil {
-		log.Println("Error reading commands directory:", err)
+		logError("Error reading commands directory:", err)
 		return
 	}
 
 	fmt.Println("Available commands:")
-	for _, file := range files {
-		if file.IsDir() {
-			fmt.Println(" -", file.Name())
+	for _, dir := range dirs {
+		if dir.IsDir() {
+			fmt.Println(" -", dir.Name())
 		}
 	}
 }
 
-func readCommand(filePath string) (string, error) {
+func getCommandsDirectory() string {
+	return filepath.Join(os.Getenv("HOME"), ".config", "fabrun", "commands")
+}
+
+func getCommandFilePath(commandID string) string {
+	return filepath.Join(getCommandsDirectory(), commandID, "command.md")
+}
+
+func readCommandFromFile(filePath string) (string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return "", err
@@ -91,19 +103,23 @@ func readCommand(filePath string) (string, error) {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	var commandString strings.Builder
+	var commandBuilder strings.Builder
 	for scanner.Scan() {
-		commandString.WriteString(scanner.Text())
+		commandBuilder.WriteString(scanner.Text())
 	}
 
-	return commandString.String(), scanner.Err()
+	return commandBuilder.String(), scanner.Err()
 }
 
-func runCommand(command string) {
+func executeCommand(command string) {
 	cmd := exec.Command("bash", "-c", command)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		log.Println("Command execution failed with error:", err)
+		logError("Command execution failed with error:", err)
 	}
+}
+
+func logError(message string, err error) {
+	log.Println(message, err)
 }
