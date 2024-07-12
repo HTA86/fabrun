@@ -1,30 +1,29 @@
 import argparse
 import subprocess
-import os
+from pathlib import Path
 import logging
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
-COMMANDS_DIR = os.path.expanduser('~/.config/fabrun/commands')
+COMMANDS_DIR = Path.home() / '.config' / 'fabrun' / 'commands'
 
-def load_command(command_name):
+def load_command(command_name: str) -> str:
     """
     Load the command from a specified file.
 
     :param command_name: Name of the command file (without extension).
     :return: The command as a string, or None if the file does not exist or is empty.
     """
-    command_file = os.path.join(COMMANDS_DIR, command_name, 'command.md')
+    command_file = COMMANDS_DIR / command_name / 'command.md'
     
-    if not os.path.isfile(command_file):
+    if not command_file.is_file():
         logger.error(f"Command file '{command_file}' does not exist.")
         return None
 
     try:
-        with open(command_file, 'r') as file:
-            command = file.read().strip()
+        command = command_file.read_text().strip()
         if not command:
             logger.error(f"Command file '{command_file}' is empty.")
             return None
@@ -33,7 +32,7 @@ def load_command(command_name):
         logger.error(f"Error reading command file '{command_file}': {e}")
         return None
 
-def run_command(command):
+def run_command(command: str):
     """
     Execute the given command using the system shell.
 
@@ -51,16 +50,18 @@ def run_command(command):
     except Exception as e:
         logger.error(f"Unexpected error running command '{command}': {e}")
 
-def list_commands():
+def list_commands() -> list:
     """
     List all available commands in the COMMANDS_DIR.
+    
+    :return: List of available command names.
     """
-    if not os.path.isdir(COMMANDS_DIR):
+    if not COMMANDS_DIR.is_dir():
         logger.error(f"Commands directory '{COMMANDS_DIR}' does not exist.")
         return []
 
     try:
-        return [d for d in os.listdir(COMMANDS_DIR) if os.path.isdir(os.path.join(COMMANDS_DIR, d))]
+        return [d.name for d in COMMANDS_DIR.iterdir() if d.is_dir()]
     except Exception as e:
         logger.error(f"Error listing commands in '{COMMANDS_DIR}': {e}")
         return []
@@ -92,5 +93,5 @@ def main():
         parser.print_help()
 
 if __name__ == "__main__":
-    os.makedirs(COMMANDS_DIR, exist_ok=True)
+    COMMANDS_DIR.mkdir(parents=True, exist_ok=True)
     main()
