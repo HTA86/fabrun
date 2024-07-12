@@ -42,6 +42,7 @@ fabrun diff
 ### Folder Structure
 
 Here is an example of how you can organize your commands:
+```
 ~/.config/fabrun/commands/
 ├── git_commit/
 │   └── command.md
@@ -51,6 +52,7 @@ Here is an example of how you can organize your commands:
 │   └── command.md
 └── diff/
     └── command.md
+```
 
 In this structure:
 
