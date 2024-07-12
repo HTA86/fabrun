@@ -72,19 +72,23 @@ func printVersion() {
 }
 
 func listCommands() {
-	commandsDir := getCommandsDirectory()
-	dirs, err := os.ReadDir(commandsDir)
+	commandDirs, err := getCommandDirectories()
 	if err != nil {
 		logError("Error reading commands directory:", err)
 		return
 	}
 
 	fmt.Println("Available commands:")
-	for _, dir := range dirs {
+	for _, dir := range commandDirs {
 		if dir.IsDir() {
 			fmt.Println(" -", dir.Name())
 		}
 	}
+}
+
+func getCommandDirectories() ([]os.DirEntry, error) {
+	commandsDir := getCommandsDirectory()
+	return os.ReadDir(commandsDir)
 }
 
 func getCommandsDirectory() string {
@@ -96,23 +100,39 @@ func getCommandFilePath(commandID string) string {
 }
 
 func readCommandFromFile(filePath string) (string, error) {
-	file, err := os.Open(filePath)
+	file, err := openFile(filePath)
 	if err != nil {
 		return "", err
 	}
 	defer file.Close()
 
+	return readCommand(file)
+}
+
+func openFile(filePath string) (*os.File, error) {
+	return os.Open(filePath)
+}
+
+func readCommand(file *os.File) (string, error) {
 	scanner := bufio.NewScanner(file)
-	var commandBuilder strings.Builder
+	var commandStringBuilder strings.Builder
 	for scanner.Scan() {
-		commandBuilder.WriteString(scanner.Text())
+		commandStringBuilder.WriteString(scanner.Text())
 	}
 
-	return commandBuilder.String(), scanner.Err()
+	return commandStringBuilder.String(), scanner.Err()
 }
 
 func executeCommand(command string) {
-	cmd := exec.Command("bash", "-c", command)
+	cmd := buildCommand(command)
+	runCommand(cmd)
+}
+
+func buildCommand(command string) *exec.Cmd {
+	return exec.Command("bash", "-c", command)
+}
+
+func runCommand(cmd *exec.Cmd) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
