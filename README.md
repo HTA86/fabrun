@@ -20,17 +20,17 @@ The primary purpose of FabRun is to make it easier to run lengthy and intricate 
 
 ## Usage
 
-### Running Commands
+#### Running Commands
 
 Store your commands in command.md files within folders. The folder name will be used to identify and run the corresponding command.
 
-Example
+#### Example
 
 1.	Create a folder and a command.md file for your Fabric command:
 
 ```sh
-mkdir -p ~/.config/fabrun/commands/git_commit
-echo "fabric --stream --pattern create_git_diff_commit" > ~/.config/fabrun/commands/git_commit/command.md
+mkdir -p ~/.config/fabrun/commands/diff
+echo "fabric --stream --pattern create_git_diff_commit" > ~/.config/fabrun/commands/diff/command.md
 ```
 
 2.	Run the command using FabRun:
@@ -54,11 +54,11 @@ Here is an example of how you can organize your commands:
     └── command.md
 ```
 
-In this structure:
+#### In this structure:
 * Each folder name (git_commit, deploy, backup, diff) corresponds to the command you will use with FabRun.
 * Inside each folder, the command.md file contains the actual command to be executed.
 
-Listing Available Commands
+### Listing Available Commands
 
 To list all available commands and their descriptions, use the --list or -l flag:
 
