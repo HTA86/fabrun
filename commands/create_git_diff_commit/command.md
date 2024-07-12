@@ -1,0 +1,1 @@
+git diff | fabric --stream --pattern create_git_diff_commit
