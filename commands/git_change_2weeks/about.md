@@ -1,0 +1,1 @@
+Generates git logs from the past 2 weeks and processes them with Fabric using the 'summarize_git_changes' pattern.

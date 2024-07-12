@@ -1,0 +1,1 @@
+Generates a git diff and processes it with Fabric using the 'create_git_diff_commit' pattern.
