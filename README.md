@@ -18,15 +18,15 @@ The primary purpose of FabRun is to make it easier to run lengthy and intricate 
 
 2.	Ensure you have Python installed (version 3.6 or later).
 
-Usage
+## Usage
 
-Running Commands
+### Running Commands
 
 Store your commands in command.md files within folders. The folder name will be used to identify and run the corresponding command.
 
 Example
 
-	1.	Create a folder and a command.md file for your Fabric command:
+1.	Create a folder and a command.md file for your Fabric command:
 
 ```sh
 mkdir -p ~/.config/fabrun/commands/git_commit
