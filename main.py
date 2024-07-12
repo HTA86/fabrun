@@ -4,7 +4,7 @@ import os
 import logging
 
 # Setup logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
 COMMANDS_DIR = os.path.expanduser('~/.config/fabrun/commands')
@@ -45,7 +45,7 @@ def run_command(command):
 
     try:
         result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
-        logger.info(result.stdout)
+        print(result.stdout)
     except subprocess.CalledProcessError as e:
         logger.error(f"Error running command '{command}': {e.stderr}")
     except Exception as e:
@@ -77,11 +77,11 @@ def main():
     if args.list:
         commands = list_commands()
         if commands:
-            logger.info("Available commands:")
+            print("Available commands:")
             for cmd in commands:
-                logger.info(f" - {cmd}")
+                print(f" - {cmd}")
         else:
-            logger.info("No commands available.")
+            print("No commands available.")
     elif args.command_name:
         command = load_command(args.command_name)
         if command:
