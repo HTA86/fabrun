@@ -20,7 +20,25 @@ The primary purpose of FabRun is to make it easier to run lengthy and intricate 
 
 ## Usage
 
-#### Running Commands
+#### Copy all Commands
+```sh
+cp -r commands/ ~/.config/fabrun/commands/
+```
+
+#### Listing Available Commands
+```sh
+fabrun --list
+```
+
+#### Running a Command
+```sh
+fabrun diff
+```
+
+This command runns the command in the file from the `commands/"diff"/command.md`
+
+
+#### Create a custom Command
 
 Store your commands in command.md files within folders. The folder name will be used to identify and run the corresponding command.
 
@@ -57,11 +75,3 @@ Here is an example of how you can organize your commands:
 #### In this structure:
 * Each folder name (git_commit, deploy, backup, diff) corresponds to the command you will use with FabRun.
 * Inside each folder, the command.md file contains the actual command to be executed.
-
-### Listing Available Commands
-
-To list all available commands and their descriptions, use the --list or -l flag:
-
-```sh
-fabrun --list
-```
