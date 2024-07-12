@@ -19,13 +19,13 @@ def load_command(command_name: str) -> str:
     command_file = COMMANDS_DIR / command_name / 'command.md'
     
     if not command_file.is_file():
-        logger.error(f"Command file '{command_file}' does not exist.")
+        logger.error(f"Error: Command file '{command_file}' does not exist.")
         return None
 
     try:
         command = command_file.read_text().strip()
         if not command:
-            logger.error(f"Command file '{command_file}' is empty.")
+            logger.error(f"Error: Command file '{command_file}' is empty.")
             return None
         return command
     except Exception as e:
@@ -44,6 +44,7 @@ def run_command(command: str):
 
     try:
         result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
+        logger.info("Command executed successfully:\n")
         print(result.stdout)
     except subprocess.CalledProcessError as e:
         logger.error(f"Error running command '{command}': {e.stderr}")
@@ -57,7 +58,7 @@ def list_commands() -> list:
     :return: List of available command names.
     """
     if not COMMANDS_DIR.is_dir():
-        logger.error(f"Commands directory '{COMMANDS_DIR}' does not exist.")
+        logger.error(f"Error: Commands directory '{COMMANDS_DIR}' does not exist.")
         return []
 
     try:
@@ -70,7 +71,14 @@ def main():
     """
     Main function to parse arguments and run the specified command.
     """
-    parser = argparse.ArgumentParser(description="Run a command from a file.")
+    parser = argparse.ArgumentParser(
+        description="Run a command from a file.",
+        epilog="Example usage:\n"
+               "  fabrun git_commit           # Run the git_commit command\n"
+               "  fabrun --list               # List all available commands\n"
+               "  fabrun --help               # Show this help message",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
     parser.add_argument('command_name', type=str, nargs='?', help="The name of the command to run.")
     parser.add_argument('--list', '-l', action='store_true', help="List all available commands.")
     args = parser.parse_args()
