@@ -97,3 +97,10 @@ GOOS=linux GOARCH=amd64 go build -o releases/fabrun-linux-amd64
 # Bygg för Windows på AMD64
 GOOS=windows GOARCH=amd64 go build -o releases/fabrun-windows-amd64.exe
 ```
+
+#### Use build script
+Make the script executable and run it:
+```sh
+chmod +x build.sh
+./build.sh
+```
