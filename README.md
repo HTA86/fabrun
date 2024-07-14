@@ -2,7 +2,7 @@
 
 ### **Disclaimer:** FabRun is currently under development and is not ready for production use. Use at your own risk.
 
-FabRun is a simple utility designed to run predefined commands stored in command.md files. Initially created to simplify running long and complex Fabric commands, FabRun now serves as a general-purpose tool for executing any custom commands with shorter, more memorable names.
+FabRun is a simple utility designed to run predefined commands stored in command.md files. Initially created to simplify running long and complex [Fabric](https://github.com/danielmiessler/fabric) commands, FabRun now serves as a general-purpose tool for executing any custom commands with shorter, more memorable names.
 
 ## Folder Structure
 
