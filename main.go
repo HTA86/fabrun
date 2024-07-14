@@ -12,7 +12,7 @@ func main() {
 	var listCommands bool
 
 	flag.StringVar(&inputValue, "var", "", "input value to replace {{input}} placeholder in command")
-	flag.BoolVar(&listCommands, "list", false, "list all available commands")
+	flag.BoolVar(&listCommands, "list", false, "")
 	flag.BoolVar(&listCommands, "l", false, "list all available commands (shorthand)")
 	flag.Parse()
 
