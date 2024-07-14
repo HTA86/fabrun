@@ -1,6 +1,30 @@
 # FabRun
 
-FabRun is a simple utility designed to run predefined commands stored in `command.md` files. Initially created to simplify running long and complex Fabric commands, FabRun now serves as a general-purpose tool for executing any custom commands with shorter, more memorable names.
+### **Disclaimer:** FabRun is currently under development and is not ready for production use. Use at your own risk.
+
+FabRun is a simple utility designed to run predefined commands stored in command.md files. Initially created to simplify running long and complex Fabric commands, FabRun now serves as a general-purpose tool for executing any custom commands with shorter, more memorable names.
+
+## Folder Structure
+
+FabRun uses a straightforward folder structure to organize your commands. Each folder name corresponds to the command you will use with FabRun. Inside each folder, the command.md file contains the actual command to be executed.
+
+Here is an example of how you can organize your commands:
+```
+~/.config/fabrun/commands/
+├── git_commit/
+│   └── command.md
+├── deploy/
+│   └── command.md
+├── backup/
+│   └── command.md
+└── diff/
+    └── command.md
+```
+
+### In this structure:
+* Each folder name (git_commit, deploy, backup, diff) corresponds to the command you will use with FabRun.
+* Inside each folder, the command.md file contains the actual command to be executed.
+
 
 ## Purpose
 
@@ -8,15 +32,40 @@ The primary purpose of FabRun is to make it easier to run lengthy and intricate 
 
 ## Installation
 
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/HTA86/fabrun.git
-   cd fabrun
-   chmod +x fabrun
-   echo "export PATH=\$PATH:$(pwd)" >> ~/.zshrc && source ~/.zshrc
-   ```
+### Via Homebrew
 
-2.	Ensure you have Python installed (version 3.6 or later).
+1. Add the tap:
+```sh
+brew tap HTA86/fabrun
+```
+
+2. Install FabRun:
+```sh
+brew install fabrun
+```
+
+3. Verify installation:
+```sh
+fabrun --version
+```
+
+## Update
+
+### Via Homebrew
+
+1. Update:
+```sh
+brew update
+```
+
+### Update Commands
+To update the commands from the GitHub repository, use the --update-commands flag:
+```sh
+fabrun --update-commands
+```
+
+
+
 
 ## Usage
 
@@ -32,7 +81,7 @@ fabrun --list
 
 #### Running a Command
 ```sh
-fabrun diff
+fabrun <command_name>
 ```
 
 This command runs the command defined in `~/.config/fabrun/commands/diff/command.md`.
@@ -57,30 +106,6 @@ echo "fabric --stream --pattern create_git_diff_commit" > ~/.config/fabrun/comma
 fabrun diff
 ```
 
-### Folder Structure
-
-Here is an example of how you can organize your commands:
-```
-~/.config/fabrun/commands/
-├── git_commit/
-│   └── command.md
-├── deploy/
-│   └── command.md
-├── backup/
-│   └── command.md
-└── diff/
-    └── command.md
-```
-
-#### In this structure:
-* Each folder name (git_commit, deploy, backup, diff) corresponds to the command you will use with FabRun.
-* Inside each folder, the command.md file contains the actual command to be executed.
-
-### Update Commands
-To update the commands from the GitHub repository, use the --update-commands flag:
-```sh
-fabrun --update-commands
-```
 
 ## Develop
 #### Build
