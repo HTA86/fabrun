@@ -2,56 +2,48 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
-func ListCommands() {
-	dirs, err := GetCommandDirectories()
-	if err != nil {
-		LogError("Error reading commands directory:", err)
-		return
-	}
+func executeCommand(command string) error {
+	// Create a new command execution
+	cmd := exec.Command("sh", "-c", command)
 
-	fmt.Println("Available commands:")
-	for _, dir := range dirs {
-		if dir.IsDir() {
-			fmt.Println(" -", dir.Name())
-		}
-	}
+	// Set standard output and standard error to the current process's standard output and standard error
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	// Run the command
+	return cmd.Run()
 }
 
-func ReadCommandFromFile(filePath string) (string, error) {
-	file, err := os.Open(filePath)
+func readCommandFile(commandName string) (string, error) {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+
+	commandFilePath := filepath.Join(homeDir, ".config", "fabrun", "commands", commandName, "command.md")
+
+	file, err := os.Open(commandFilePath)
 	if err != nil {
 		return "", err
 	}
 	defer file.Close()
 
-	var cmdBuilder strings.Builder
 	scanner := bufio.NewScanner(file)
+	var command strings.Builder
 	for scanner.Scan() {
-		cmdBuilder.WriteString(scanner.Text())
+		command.WriteString(scanner.Text())
+		command.WriteString("\n")
 	}
 
-	return cmdBuilder.String(), scanner.Err()
-}
-
-func ExecuteCommand(cmd string) {
-	c := buildCommand(cmd)
-	runCommand(c)
-}
-
-func buildCommand(cmd string) *exec.Cmd {
-	return exec.Command("bash", "-c", cmd)
-}
-
-func runCommand(c *exec.Cmd) {
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
-	if err := c.Run(); err != nil {
-		LogError("Command execution failed with error:", err)
+	if err := scanner.Err(); err != nil {
+		return "", err
 	}
+
+	return strings.TrimSpace(command.String()), nil
 }
