@@ -2,11 +2,27 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 )
+
+var (
+	homeDir         string
+	commandFilePath string
+)
+
+func init() {
+	var err error
+	homeDir, err = os.UserHomeDir()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error getting home directory: %v\n", err)
+		os.Exit(1)
+	}
+	commandFilePath = filepath.Join(homeDir, ".config", "fabrun", "commands")
+}
 
 func executeCommand(command string) error {
 	// Create a new command execution
@@ -21,13 +37,6 @@ func executeCommand(command string) error {
 }
 
 func readCommandFile(commandName string) (string, error) {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-
-	commandFilePath := filepath.Join(homeDir, ".config", "fabrun", "commands", commandName, "command.md")
-
 	file, err := os.Open(commandFilePath)
 	if err != nil {
 		return "", err
