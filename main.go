@@ -9,8 +9,26 @@ import (
 
 func main() {
 	var inputValue string
+	var listCommands bool
+
 	flag.StringVar(&inputValue, "var", "", "input value to replace {{input}} placeholder in command")
+	flag.BoolVar(&listCommands, "list", false, "list all available commands")
+	flag.BoolVar(&listCommands, "l", false, "list all available commands (shorthand)")
 	flag.Parse()
+
+	if listCommands {
+		commandNames, err := getAllCommandNames()
+		if err != nil {
+			fmt.Printf("Error retrieving command names: %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Println("Available commands:")
+		for _, name := range commandNames {
+			fmt.Println(name)
+		}
+		os.Exit(0)
+	}
 
 	if flag.NArg() < 1 {
 		fmt.Println("Usage: fabrun <command name> [--var <input>]")

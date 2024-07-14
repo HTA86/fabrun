@@ -11,7 +11,7 @@ import (
 
 var (
 	homeDir         string
-	commandFilePath string
+	commandBasePath string
 )
 
 func init() {
@@ -21,7 +21,7 @@ func init() {
 		fmt.Fprintf(os.Stderr, "Error getting home directory: %v\n", err)
 		os.Exit(1)
 	}
-	commandFilePath = filepath.Join(homeDir, ".config", "fabrun", "commands")
+	commandBasePath = filepath.Join(homeDir, ".config", "fabrun", "commands")
 }
 
 func executeCommand(command string) error {
@@ -37,7 +37,8 @@ func executeCommand(command string) error {
 }
 
 func readCommandFile(commandName string) (string, error) {
-	file, err := os.Open(commandFilePath)
+	filePath := filepath.Join(commandBasePath, commandName, "command.md")
+	file, err := os.Open(filePath)
 	if err != nil {
 		return "", err
 	}
@@ -55,4 +56,20 @@ func readCommandFile(commandName string) (string, error) {
 	}
 
 	return strings.TrimSpace(command.String()), nil
+}
+
+func getAllCommandNames() ([]string, error) {
+	entries, err := os.ReadDir(commandBasePath)
+	if err != nil {
+		return nil, err
+	}
+
+	var commandNames []string
+	for _, entry := range entries {
+		if entry.IsDir() {
+			commandNames = append(commandNames, entry.Name())
+		}
+	}
+
+	return commandNames, nil
 }
