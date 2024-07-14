@@ -28,7 +28,7 @@ Here is an example of how you can organize your commands:
 
 ## Purpose
 
-The primary purpose of FabRun is to make it easier to run lengthy and intricate Fabric commands. By storing these commands in a structured way, FabRun allows you to execute them effortlessly from the command line, reducing the need to remember and type out long command sequences. Additionally, FabRun can be used to manage and execute any custom command you need, providing a more convenient way to run your scripts.
+The primary purpose of FabRun is to make it easier to run lengthy and intricate [Fabric](https://github.com/danielmiessler/fabric) commands. By storing these commands in a structured way, FabRun allows you to execute them effortlessly from the command line, reducing the need to remember and type out long command sequences. Additionally, FabRun can be used to manage and execute any custom command you need, providing a more convenient way to run your scripts.
 
 ## Installation
 
@@ -93,7 +93,7 @@ Store your commands in command.md files within folders. The folder name will be 
 
 #### Example
 
-1.	Create a folder and a command.md file for your Fabric command:
+1.	Create a folder and a command.md file for your command:
 
 ```sh
 mkdir -p ~/.config/fabrun/commands/diff
